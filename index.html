@@ -252,9 +252,9 @@ function renderList() {
           <svg viewBox="0 0 24 24" class="icon-play"><path d="M8 5v14l11-7z"/></svg>
           <svg viewBox="0 0 24 24" class="icon-pause" style="display:none"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
         </button>
-        <a class="btn-icon" href="${getAudioUrl(s)}" download title="Download" aria-label="Download ${s.name}">
+        <button class="btn-icon" onclick="downloadAudio(${i})" title="Download" aria-label="Download ${s.name}" id="dlBtn-${i}">
           <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-        </a>
+        </button>
       </div>
       <div class="progress-wrap">
         <span class="time" id="cur-${i}">0:00</span>
@@ -354,6 +354,29 @@ function togglePlayAll() {
 function toggleShuffle() {
   isShuffle = !isShuffle;
   document.getElementById('btnShuffle').classList.toggle('active', isShuffle);
+}
+
+async function downloadAudio(i) {
+  const s = surahs[i];
+  const url = getAudioUrl(s);
+  const btn = document.getElementById('dlBtn-' + i);
+  btn.style.opacity = '0.5';
+  btn.style.pointerEvents = 'none';
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${String(s.number).padStart(3,'0')}_${s.name}.mp3`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+  } catch (e) {
+    alert('Download gagal. Coba lagi.');
+  }
+  btn.style.opacity = '';
+  btn.style.pointerEvents = '';
 }
 
 renderList();
