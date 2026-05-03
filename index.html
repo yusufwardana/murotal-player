@@ -226,8 +226,8 @@ let isPlayAll = false;
 let isShuffle = false;
 let audios = {};
 
-// Mishary Rashid Alafasy — via islamic.network CDN
-function getAudioUrl(s) { return `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${s.number}.mp3`; }
+// Mishary Rashid Alafasy — via mp3quran.net (CORS enabled)
+function getAudioUrl(s) { return `https://server8.mp3quran.net/afs/${s.number}.mp3`; }
 
 function formatTime(s) {
   if (isNaN(s)) return "0:00";
